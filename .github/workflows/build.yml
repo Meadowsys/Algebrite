@@ -1,0 +1,25 @@
+on:
+  push:
+    branches:
+    - "**"
+
+jobs:
+  build:
+    name: Build lib
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: checkout code
+      uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+
+    - name: setup node
+      uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      with:
+        node-version: "18.16.0"
+
+    - run: npm install
+    - run: bazelisk build algebrite
+    - run: bazelisk build npm
+
+    # tmp
+    - run: ls -R
