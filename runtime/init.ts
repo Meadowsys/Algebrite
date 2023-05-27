@@ -354,7 +354,7 @@ Returns the curl of vector u.
 
 */
 const defn_str = [
-  'version="' + version + '"',
+  'version="' + "1.3.1" + '"',
   'e=exp(1)',
   'i=sqrt(-1)',
   'autoexpand=1',
