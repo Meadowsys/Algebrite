@@ -94,91 +94,93 @@ import {
 } from './sources/approxratio';
 import { make_hashed_itab } from './sources/integral';
 import { run } from './runtime/run';
+import type { U } from "./runtime/defs";
 
-const $: { [key: string]: unknown } = {};
-$.version = version;
-$.isadd = isadd;
-$.ismultiply = ismultiply;
-$.ispower = ispower;
-$.isfactorial = isfactorial;
-$.car = car;
-$.cdr = cdr;
-$.caar = caar;
-$.cadr = cadr;
-$.cdar = cdar;
-$.cddr = cddr;
-$.caadr = caadr;
-$.caddr = caddr;
-$.cadar = cadar;
-$.cdadr = cdadr;
-$.cddar = cddar;
-$.cdddr = cdddr;
-$.caaddr = caaddr;
-$.cadadr = cadadr;
-$.caddar = caddar;
-$.cdaddr = cdaddr;
-$.cadddr = cadddr;
-$.cddddr = cddddr;
-$.caddddr = caddddr;
-$.cadaddr = cadaddr;
-$.cddaddr = cddaddr;
-$.caddadr = caddadr;
-$.cdddaddr = cdddaddr;
-$.caddaddr = caddaddr;
-$.symbol = symbol;
-$.iscons = iscons;
-$.isrational = isrational;
-$.isdouble = isdouble;
-$.isNumericAtom = isNumericAtom;
-$.isstr = isstr;
-$.istensor = istensor;
-$.issymbol = issymbol;
-$.iskeyword = iskeyword;
-$.CONS = CONS;
-$.NUM = NUM;
-$.DOUBLE = DOUBLE;
-$.STR = STR;
-$.TENSOR = TENSOR;
-$.SYM = SYM;
-$.approxRadicals = approxRadicals;
-$.approxRationalsOfLogs = approxRationalsOfLogs;
-$.approxAll = approxAll;
-$.testApprox = testApprox;
-$.make_hashed_itab = make_hashed_itab;
-$.isZeroAtomOrTensor = isZeroAtomOrTensor;
-$.isnegativenumber = isnegativenumber;
-$.isplusone = isplusone;
-$.isminusone = isminusone;
-$.isinteger = isinteger;
-$.isnonnegativeinteger = isnonnegativeinteger;
-$.isposint = isposint;
-$.isnegativeterm = isnegativeterm;
-$.isimaginarynumber = isimaginarynumber;
-$.iscomplexnumber = iscomplexnumber;
-$.iseveninteger = iseveninteger;
-$.isnegative = isnegative;
-$.issymbolic = issymbolic;
-$.isintegerfactor = isintegerfactor;
-$.isoneover = isoneover;
-$.isfraction = isfraction;
-$.isoneoversqrttwo = isoneoversqrttwo;
-$.isminusoneoversqrttwo = isminusoneoversqrttwo;
-$.isfloating = isfloating;
-$.isimaginaryunit = isimaginaryunit;
-$.isquarterturn = isquarterturn;
-$.isnpi = isnpi;
-$.equal = equal;
-$.length = length;
-$.scan = scan;
-$.Find = Find;
-$.get_binding = get_binding;
-$.set_binding = set_binding;
-$.usr_symbol = usr_symbol;
-$.collectUserSymbols = collectUserSymbols;
-$.init = init;
-$.exec = exec;
-$.parse = parse;
-$.run = run;
+const _$ = {
+  version,
+  isadd,
+  ismultiply,
+  ispower,
+  isfactorial,
+  car,
+  cdr,
+  caar,
+  cadr,
+  cdar,
+  cddr,
+  caadr,
+  caddr,
+  cadar,
+  cdadr,
+  cddar,
+  cdddr,
+  caaddr,
+  cadadr,
+  caddar,
+  cdaddr,
+  cadddr,
+  cddddr,
+  caddddr,
+  cadaddr,
+  cddaddr,
+  caddadr,
+  cdddaddr,
+  caddaddr,
+  symbol,
+  iscons,
+  isrational,
+  isdouble,
+  isNumericAtom,
+  isstr,
+  istensor,
+  issymbol,
+  iskeyword,
+  CONS,
+  NUM,
+  DOUBLE,
+  STR,
+  TENSOR,
+  SYM,
+  approxRadicals,
+  approxRationalsOfLogs,
+  approxAll,
+  testApprox,
+  make_hashed_itab,
+  isZeroAtomOrTensor,
+  isnegativenumber,
+  isplusone,
+  isminusone,
+  isinteger,
+  isnonnegativeinteger,
+  isposint,
+  isnegativeterm,
+  isimaginarynumber,
+  iscomplexnumber,
+  iseveninteger,
+  isnegative,
+  issymbolic,
+  isintegerfactor,
+  isoneover,
+  isfraction,
+  isoneoversqrttwo,
+  isminusoneoversqrttwo,
+  isfloating,
+  isimaginaryunit,
+  isquarterturn,
+  isnpi,
+  equal,
+  length,
+  scan,
+  Find,
+  get_binding,
+  set_binding,
+  usr_symbol,
+  collectUserSymbols,
+  init,
+  exec,
+  parse,
+  run,
+};
 
 const builtin_fns = [
   'abs',
@@ -313,8 +315,8 @@ const builtin_fns = [
   'transpose',
   'unit',
   'zero',
-];
+] as const;
 
+const $: typeof _$ & { [k in typeof builtin_fns[number]]: (...argus: Array<string | number | U>) => U } = _$ as any;
 Array.from(builtin_fns).map(fn => ($[fn] = exec.bind(this, fn)));
 export default $;
-
