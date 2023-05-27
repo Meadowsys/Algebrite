@@ -10,16 +10,26 @@ jobs:
 
     steps:
     - name: checkout code
-      uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+      uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+
+    - name: setup pnpm
+      uses: pnpm/action-setup@c3b53f6a16e57305370b4ae5a540c2077a1d50dd # v2.2.4
 
     - name: setup node
-      uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      run: pnpm node -v
+
+    - name: install deps
+      run: pnpm i
+
+    - name: build
+      run: pnpm unbuild
+
+    - name: package
+      id: package
+      run: echo "FILENAME=$(pnpm pack)" >> $GITHUB_OUTPUT
+
+    - name: upload artifact
+      uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
       with:
-        node-version: "18.16.0"
-
-    - run: npm install
-    - run: bazelisk build algebrite
-    - run: bazelisk build npm
-
-    # tmp
-    - run: ls -R
+        name: tgz
+        path: ${{ steps.package.outputs.FILENAME }}
